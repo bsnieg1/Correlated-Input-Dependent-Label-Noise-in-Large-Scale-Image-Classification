@@ -1,0 +1,93 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Testing / type checking / linting
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Secrets / environment variables
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Datasets (too large for git)
+data/
+datasets/
+*.tar
+*.tar.gz
+*.zip
+*.npy
+*.npz
+*.h5
+*.hdf5
+
+# Model checkpoints / weights
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+
+# Experiment logs and outputs
+runs/
+logs/
+outputs/
+# results: only the final aggregated tables and figures are tracked (python -m analysis.aggregate);
+# per-run outputs stay local and can be regenerated with python -m src.run_grid
+results/*
+!results/tables/
+!results/figures/
+lightning_logs/
+wandb/
+mlruns/
+tensorboard/
+*.log
+
+
+# Claude / Claude Code (CLAUDE.md is tracked: project context for other machines)
+CLAUDE.local.md
+**/CLAUDE.local.md
+.claude/
+.mcp.json
+.claudeignore
+
+
+
+# IDEs / editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
