@@ -59,9 +59,17 @@ def covariance_to_correlation(sigma):
     return sigma / (std[..., :, None] * std[..., None, :])
 
 
+def balanced_accuracy(logp, y):
+    """Mean per-class recall over the classes present in y (robust to class imbalance)."""
+    pred = logp.argmax(dim=-1)
+    recalls = [(pred[y == c] == c).float().mean() for c in y.unique()]
+    return torch.stack(recalls).mean().item()
+
+
 def classification_metrics(logp, y, pairs=None):
     out = {
         "top1": top_k_accuracy(logp, y, 1),
+        "balanced_acc": balanced_accuracy(logp, y),
         "top2": top_k_accuracy(logp, y, 2),
         "nll": nll(logp, y),
         "ece": ece(logp, y),

@@ -1,0 +1,41 @@
+id,score,expert_label,network_prediction,speciesnet_label
+GP1A_2/GP1A_207170244.JPG,13.239475,european hare,european roe deer,blank
+GP1A_2/GP1A_207170245.JPG,13.232999,european hare,european roe deer,blank
+ZAURZ1A_3/ZAURZ1A_3DSCF0308.JPG,10.098838,wild boar,other_bird,wild boar
+ZAURZ1A_3/ZAURZ1A_3DSCF0305.JPG,9.906655,wild boar,other_bird,wild boar
+NORY1A_2/NORY1A_2DSCF0158.JPG,9.889522,domestic cat,eurasian badger,blank
+ZAURZ1A_3/ZAURZ1A_3DSCF0304.JPG,9.3087,wild boar,other_bird,wild boar
+ZAURZ1A_3/ZAURZ1A_3DSCF0307.JPG,8.955077,wild boar,other_bird,wild boar
+GP2A/GP2A_105310058.JPG,8.819299,wild boar,red deer,blank
+NORY1A_2/NORY1A_2DSCF0157.JPG,8.797315,domestic cat,eurasian badger,blank
+GP2A/GP2A_105310059.JPG,8.645175,wild boar,red deer,blank
+ZAURZ1A_3/ZAURZ1A_3DSCF0323.JPG,8.454604,wild boar,other_bird,wild boar
+GP1A_3/GP1A_308050265.JPG,8.33892,red fox,european roe deer,blank
+GP1A/GP1A_106100182.JPG,8.2838545,wild boar,european roe deer,wild boar
+KROL2A_2/KROL2A_2DSCF0047.JPG,7.6628175,red deer,wild boar,blank
+GP1A_2/GP1A_207160235.JPG,7.4548035,european roe deer,eurasian badger,other_mammal
+ZAURZ2A_2/ZAURZ2A_2DSCF0166.JPG,7.404433,red fox,european roe deer,other_mammal
+GP2A/GP2A_106050083.JPG,7.37396,european roe deer,wild boar,european roe deer
+KROL1A_3/KROL1A_3DSCF0167.JPG,7.069271,red fox,other_mammal,red fox
+ZAURZ2A_2/ZAURZ2A_2DSCF0124.JPG,6.952404,european roe deer,domestic cat,blank
+GP1A_3/GP1A_308050266.JPG,6.918307,red fox,european roe deer,blank
+ZAURZ1A_3/ZAURZ1A_3DSCF0322.JPG,6.6627674,wild boar,other_bird,wild boar
+GP1A/GP1A_106100181.JPG,6.1676126,wild boar,european roe deer,other_mammal
+KROL2A_2/KROL2A_2DSCF0046.JPG,5.886169,red deer,wild boar,red deer
+ZAURZ1A/ZAURZ1A_1DSCF0272.JPG,5.802059,domestic dog,wild boar,other_mammal
+NORY1A_3/NORY1A_3DSCF0029.JPG,5.7957535,red fox,other_mammal,blank
+UJB1A/UJB1A_1IMAG0127.JPG,5.7930083,common blackbird,european hare,other_bird
+ZAURZ2A_2/ZAURZ2A_2DSCF0104.JPG,5.7862606,other_bird,wild boar,other_bird
+ZAURZ2A/ZAURZ2A_1DSCF0153.JPG,5.6088886,marten,eurasian badger,blank
+UJB1A_2/UJB1A_2IMAG0067.JPG,5.5875797,wild boar,european hare,wild boar
+GP2A/GP2A_106050082.JPG,5.5131593,european roe deer,wild boar,european roe deer
+ZAURZ2A_2/ZAURZ2A_2DSCF0355.JPG,5.495828,ring-necked pheasant,other_bird,ring-necked pheasant
+UJA1A/UJA1A_1DSCF0018.JPG,5.4699874,domestic dog,wild boar,domestic dog
+ZAURZ2A_2/ZAURZ2A_2DSCF0103.JPG,5.3602166,other_bird,wild boar,other_bird
+KROL1A_3/KROL1A_3DSCF0160.JPG,5.275783,red fox,domestic cat,red fox
+GP2A_2/GP2A_207120125.JPG,5.2499485,european roe deer,red deer,other_mammal
+KRZEM2A/KRZEM2A_1IMAG0017.JPG,5.168114,european roe deer,wild boar,european roe deer
+ZAURZ2A_2/ZAURZ2A_2DSCF0356.JPG,4.953341,ring-necked pheasant,other_bird,blank
+ZAURZ2A_2/ZAURZ2A_2DSCF0044.JPG,4.9335885,wild boar,european roe deer,blank
+GP2A_2/GP2A_207120124.JPG,4.8442574,european roe deer,red deer,blank
+KROL1A_2/DSCF0080.JPG,4.827395,other_mammal,wild boar,other_mammal

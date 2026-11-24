@@ -100,3 +100,11 @@ def test_pair_metrics_hand_example():
     assert math.isclose(m["pair_top1"], 2 / 4)
     assert math.isclose(m["other_top1"], 1 / 2)
     assert math.isclose(m["within_pair_error_share"], 2 / 3)
+
+
+def test_balanced_accuracy_hand_example():
+    from src.metrics import balanced_accuracy
+    y = torch.tensor([0, 0, 0, 0, 1])
+    pred = torch.tensor([0, 0, 0, 0, 0])      # top-1 = 0.8, but class 1 recall = 0
+    logp = torch.nn.functional.one_hot(pred, 2).float().add(1e-3).log()
+    assert math.isclose(balanced_accuracy(logp, y), 0.5)

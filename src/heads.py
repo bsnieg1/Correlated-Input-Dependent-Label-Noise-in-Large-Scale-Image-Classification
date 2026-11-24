@@ -9,6 +9,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+def fp32(h):
+    """Context for head computations: autocast off (heads always run in float32, also under AMP)."""
+    return torch.autocast(device_type=h.device.type, enabled=False)
+
+
 class LinearHead(nn.Module):
     """Standard softmax classifier (CE baseline)."""
 
@@ -17,7 +22,8 @@ class LinearHead(nn.Module):
         self.fc = nn.Linear(in_dim, num_classes)
 
     def forward(self, h):
-        return F.log_softmax(self.fc(h).float(), dim=-1)
+        with fp32(h):
+            return F.log_softmax(self.fc(h.float()), dim=-1)
 
 
 class HETHead(nn.Module):
@@ -52,15 +58,17 @@ class HETHead(nn.Module):
 
     def covariance(self, h):
         """Sigma(x) = V V^T + diag(d^2), shape [B, K, K]. Used for interpreting class correlations."""
-        mu, V, d = self.distribution_params(h.float())
-        sigma = torch.diag_embed(d ** 2)
-        if V is not None:
-            sigma = sigma + V @ V.transpose(1, 2)
-        return sigma
+        with fp32(h):
+            mu, V, d = self.distribution_params(h.float())
+            sigma = torch.diag_embed(d ** 2)
+            if V is not None:
+                sigma = sigma + V @ V.transpose(1, 2)
+            return sigma
 
     def mean_log_probs(self, h):
         """'Clean' prediction log softmax(mu / tau), without noise (alternative prediction mode)."""
-        return F.log_softmax(self.mu(h.float()) / self.tau, dim=-1)
+        with fp32(h):
+            return F.log_softmax(self.mu(h.float()) / self.tau, dim=-1)
 
     def sample_utilities(self, h, eps_K=None, eps_R=None):
         """u_s for each example, shape [B, S, K]. Noise can be passed in explicitly (tests)."""
@@ -77,7 +85,7 @@ class HETHead(nn.Module):
 
     def forward(self, h, eps_K=None, eps_R=None):
         # Kept in float32 even under AMP for numerical stability.
-        with torch.autocast(device_type=h.device.type, enabled=False):
+        with fp32(h):
             u = self.sample_utilities(h.float(), eps_K, eps_R)
             log_p = F.log_softmax(u / self.tau, dim=-1)
             return torch.logsumexp(log_p, dim=1) - math.log(u.shape[1])

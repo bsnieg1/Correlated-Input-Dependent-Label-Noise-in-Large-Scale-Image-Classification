@@ -1,0 +1,13 @@
+### Finding and fixing SpeciesNet mistakes on the test set (141 of 461 labels wrong)
+
+| training labels           | method                            | AUROC finding SpeciesNet errors   | SpeciesNet errors fixed [%]   | correct SpeciesNet labels broken [%]   |
+|:--------------------------|:----------------------------------|:----------------------------------|:------------------------------|:---------------------------------------|
+| Step 1: SpeciesNet labels | CE                                | 0.719 ± 0.003                     | 17.3 ± 1.8                    | 27.4 ± 0.2                             |
+| Step 1: SpeciesNet labels | LS (0.1)                          | 0.659 ± 0.020                     | 17.3 ± 1.6                    | 28.3 ± 1.6                             |
+| Step 1: SpeciesNet labels | HET-diag (R=0)                    | 0.721 ± 0.018                     | 18.9 ± 2.3                    | 26.4 ± 1.1                             |
+| Step 1: SpeciesNet labels | HET (R=5)                         | 0.715 ± 0.016                     | 18.9 ± 1.6                    | 27.3 ± 2.1                             |
+| Step 2: expert labels     | CE                                | 0.962 ± 0.003                     | 57.7 ± 0.8                    | 23.2 ± 2.4                             |
+| Step 2: expert labels     | LS (0.1)                          | 0.952 ± 0.005                     | 58.9 ± 0.7                    | 24.4 ± 1.7                             |
+| Step 2: expert labels     | HET-diag (R=0)                    | 0.966 ± 0.000                     | 61.7 ± 4.3                    | 24.6 ± 1.5                             |
+| Step 2: expert labels     | HET (R=5)                         | 0.964 ± 0.004                     | 58.9 ± 2.1                    | 21.7 ± 1.3                             |
+| -                         | SpeciesNet confidence (1 - score) | 0.705                             | -                             | -                                      |

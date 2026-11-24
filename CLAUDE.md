@@ -4,8 +4,8 @@ Kontekst dla Claude Code. Projekt: praca inżynierska Bartka (telekomunikacja, A
 **Collier i in., „Correlated Input-Dependent Label Noise in Large-Scale Image Classification”, CVPR 2021**
 (arXiv:2105.10305). Język pracy i komunikacji: **polski**. Kod, nazwy w kodzie i komentarze: angielski.
 
-Stan na 2026-10-28: **etap planowania zakończony, kodu jeszcze nie ma.** Wszystko poniżej oznaczone
-„planowane” to ustalenia, nie istniejące pliki.
+Stan na 2026-11-24: **kod i eksperymenty gotowe** — MNIST (S0–S3 + ablacja), fotopułapki UJ, ANIMAL-10N
+(A1, A2, A3). Wyniki i komendy: §12. Następny etap: analiza i pisanie (rozdz. 5–7).
 
 ---
 
@@ -249,6 +249,60 @@ z artykułem, ograniczenia) · 8. Podsumowanie i kierunki rozwoju. Objętość ~
       ~1,5 h na GTX 1060). `python -m src.run_grid --pattern "mnist_s*"`, potem `python -m analysis.aggregate`
       → results/tables/*.md, results/figures/*.png. Główne: HET wygrywa wyraźnie tylko przy 45% i w ostatniej epoce;
       korelacje znajdują pary (precision@3 = 1 przy ≥30%, 0 w S0/S3); softmax(μ) ma dużo niższe ECE niż średnia MC.
+
+- [x] (2026-11-20) **Nowy zbiór od promotora: fotopułapki „Multispecies Campus UJ”** (Zenodo 20425725, CC BY 4.0).
+      Mail promotora: (1) trening na etykietach z modelu, weryfikacja na ocenach ekspertów; (2) trening na ocenach
+      ekspertów; w obu szukać pomyłek; (3) przy małej liczbie danych: pretrening na danych z internetu + douczanie.
+      To zmienia założenie „bez pretrenowanych modeli” z §2 (decyzja promotora).
+      - Etykiety: `D:\inzynier_temp\LL_Dane_studenci copy\<stanowisko>\<kamera>\{predicted,true}\*.xlsx` (55 par,
+        9 429 wierszy). predicted = SpeciesNet (Classification, scores); true = poprawka człowieka (+count, species 1/2).
+        Ludzie zmienili 15% (30% wśród zdjęć ze zwierzętami). Szum skorelowany: white-tailed deer→sarna (180),
+        blank→zwierzę, bird→kos/grzywacz/śpiewak, coyote→lis. 38 nazw klas z literówkami/synonimami, długi ogon.
+      - Zdjęcia: Zenodo ma tylko kadry ze zwierzętami (bez blank/human) i bez okresu `_4` → 3 223 zdjęcia, wszystkie
+        z etykietą. Zmniejszone do 1024 px w GCP (`cloud/run_prepare.sh`) → `gs://het-thesis-bsnieg-data/zenodo_1024/`
+        i lokalnie `D:\inzynier_temp\zenodo_1024\` (+ manifest.csv z EXIF). Na dole zdjęć pasek z datą/temperaturą —
+        wyciąć w loaderze. Zdjęcia seriami → podział po seriach (EXIF) lub kamerach.
+      - GCP: projekt `het-thesis-bsnieg` (billing podpięty, limit GPU = 0, konto trial — GPU wymaga upgrade'u).
+      - Do decyzji: zestaw klas (~12–15 + inny ptak/ssak), mapowanie klas spoza taksonomii ekspertów w kroku 1,
+        backbone ImageNet (ResNet-50/ConvNeXt-T), brakujące blank i `_4` — zapytać promotora.
+- [x] (2026-11-21) **Pierwsza siatka UJ lokalnie (GTX 1060)**: `src/uj_data.py` (17 klas, mapowanie SpeciesNet przez
+      taksonomię, podział po seriach 2300/461/461), ResNet-18 ImageNet, 224×416, 15 epok, R=5; krok 1 (etykiety
+      SpeciesNet) i krok 2 (etykiety ekspertów) × CE/LS/HET-diag/HET × 3 seedy (24 przebiegi, ~6 min każdy).
+      `python -m src.run_grid --pattern "uj_*"`, potem `python -m analysis.uj_report` → results/tables/uj_*, figures/uj_*.
+      Wyniki (czysty test = eksperci; SpeciesNet sam: 69,4% top-1, myli się na 141/461):
+      krok 2: HET 72,4±1,3 > HET-diag 71,2 ≈ CE 70,9 ≈ LS 70,5 (różnica < 2 std → nieistotna); wszystkie > SpeciesNet;
+      krok 1: ~55–57%, gorzej niż SpeciesNet (sieć uczy się jego błędów, m.in. „blank” na trudnych kadrach);
+      wykrywanie błędów SpeciesNet AUROC: krok 1 ≈0,72 (≈ pewność SpeciesNet 0,705), krok 2 ≈0,96;
+      LS najlepiej skalibrowany (ECE 5% vs ~14%). Korelacje HET w kroku 1 słabe (mało danych, 17 klas).
+      Galerie podejrzanych etykiet: głównie trudne kadry (noc, mgła, zwierzę na brzegu) i serie tych samych zdjęć.
+- [x] (2026-11-24) **ANIMAL-10N — pełna siatka na GCP** (A1, A2 × CE/LS/HET-diag/HET + A3 R ∈ {1,3,9}, × 3 seedy =
+      33 przebiegi, L4, ~58 min/przebieg, ~32 h, ~25 $; 22.11–24.11). Dane: formularz KAIST nie zbiera maila (link
+      nie przychodzi) → nieoficjalny mirror raw_image_ver.zip z Google Drive (link z publicznych repo noisy-label),
+      sprawdzony MD5 f0f2b420c3371b516728ed0ef9fb2108 i licznościami klas; cache `animal10n.pt` w
+      `D:\inzynier_temp\animal10n_download\` i `gs://het-thesis-bsnieg-data/animal10n/`. L4 często niedostępne
+      (stockout) — VM ruszyła dopiero w europe-west4-b (`ZONE=europe-west4-b bash cloud/run_train.sh ...`).
+      Raport: `python -m analysis.animal_report` → results/tables/animal_{main,significance,ablation_r,cost}.md,
+      results/figures/animal_{accuracy,curves_a1,curves_a2,correlation,reliability,ablation_r}.png.
+      Wyniki (czysty test, best epoch, średnia ± std z 3 seedów):
+      A1: LS 85,5±0,1 > HET 84,7±0,6 ≈ HET-diag 84,7±0,6 ≈ CE 84,4±0,2 (tylko LS−CE > 2 std); brak spadku best→last;
+          wszystkie > literatura (CE VGG-19 79,4). HET znajduje 4/5 par (precision@5 = 0,8) — brak pary szympans–orangutan,
+          którą CE też prawie nie myli (2–3%), czyli w danych prawie nie ma tam szumu → korelacja ≈ 0 jest poprawna.
+      A2: HET-diag 79,1±0,7 > LS 77,8 > CE 76,4±0,1 (HET-diag−CE +2,65 p.p. > 2 std); HET 78,0±1,4 (różnica z CE i
+          HET-diag < 2 std). Last epoch: wszyscy ~72–73% (zapamiętywanie: flipped→flipped ~96% na końcu; HET opóźnia
+          zapamiętywanie o ~5 epok). precision@5 = 1,0. AUROC błędnych etykiet: HET/HET-diag 0,85 vs CE/LS 0,83.
+          HET softmax(μ): ECE 3,0% vs 10,7% (średnia MC) i 9,3% (CE) — najlepiej skalibrowany.
+      A3: R ∈ {0,1,3,5,9} → 84,2–84,7%, wszystko w granicach szumu; R=1 znajduje 3/5 par, R≥3 4/5.
+      Koszt HET: +31 tys. parametrów (+0,3%), epoka 25,4 vs 25,2 s.
+      **Wniosek:** korelacje (V) nie dają dokładności ponad HET-diag (zgodne z +0,6 p.p. w artykule; u nas 0), ale
+      poprawnie odtwarzają strukturę par; zysk daje sama heteroskedastyczność i tylko przy wyższym szumie (A2, best).
+      Możliwe dalej: ablacja τ ∈ {0,5; 2; 3} na A2 (dobór na val), A2 z 40% szumu.
+      Szczegóły implementacji: format .bin = 4 B id + 4 B etykieta + 3×64×64 uint8 (obsługiwany, nieużyty).
+      `src/animal_data.py` (A2 = +20% zamian w parach na oryginalnych etykietach, przed podziałem), `ResNet18Small`
+      (3×3, bez max-poolingu), AMP bf16 + channels_last tylko na GPU ≥ Volta (na GTX 1060 oba spowalniają: fp16
+      kilkanaście razy, channels_last 6×; bez nich 1060 ≈ 2,5 min/epokę). Configi: `configs/make_animal_configs.py`
+      (A1, A2 × 4 metody, A3 R ∈ {1,3,9}; 100 epok, lr 0,1, batch 128, R=5). GCP: `bash cloud/run_train.sh
+      upload-data|start|status|fetch|delete` — VM g2-standard-4 + L4 (on-demand, nie spot), sam się wyłącza,
+      wyniki co 5 min do gs://het-thesis-bsnieg-data/runs/<run>/. Limity GPU w projekcie: 1 (L4/T4, europe-west4).
 
 Do potwierdzenia z promotorem:
 - termin oddania (roboczo: koniec stycznia 2027);

@@ -76,4 +76,10 @@ def load_dataset(cfg, device):
     if name == "mnist":
         return load_mnist(cfg.get("root", "data"), cfg.get("val_fraction", 0.1), cfg.get("split_seed", 0),
                           device, cfg.get("noise"), cfg["num_classes"])
+    if name == "uj":
+        from src.uj_data import load_uj
+        return load_uj(cfg, device)
+    if name == "animal10n":
+        from src.animal_data import load_animal10n
+        return load_animal10n(cfg, device)
     raise ValueError(f"Unknown dataset: {name}")

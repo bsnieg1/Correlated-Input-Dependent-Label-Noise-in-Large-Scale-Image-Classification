@@ -1,0 +1,7 @@
+{
+  "test_images": 461,
+  "speciesnet_wrong_on_test": 141,
+  "het_step1_precision_at_50": 0.38,
+  "base_rate": 0.30585683297180044,
+  "runs": 24
+}
